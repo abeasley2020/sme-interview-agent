@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Design Interview — Purdue CDD</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #C8973A;
+  --gold-light: #E8B85A;
+  --gold-pale: #FDF6E8;
+  --black: #0D0D0D;
+  --ink: #1A1A1A;
+  --ink-light: #3D3D3D;
+  --muted: #7A7570;
+  --rule: #E2DDD8;
+  --surface: #FAFAF8;
+  --white: #FFFFFF;
+  --teal: #1D6B5E;
+  --teal-light: #F0F7F5;
+  --danger: #C0392B;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.topbar {
+  background: var(--black);
+  padding: 0 32px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar-brand::before {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.topbar-step {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .1em;
+}
+
+/* WELCOME */
+.welcome {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 72px 24px 80px;
+}
+.welcome-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.welcome h1 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.welcome h1 em { font-style: italic; color: var(--gold); }
+.welcome-intro {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink-light);
+  margin-bottom: 32px;
+}
+.welcome-meta { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+.meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: .9rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.meta-icon {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--gold-pale);
+  border: 1px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .65rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 14px 28px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-primary:hover { background: var(--ink-light); }
+
+.btn-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-next:hover { background: var(--gold-light); }
+
+.btn-ghost {
+  background: none;
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .875rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.btn-ghost:hover { border-color: var(--ink-light); color: var(--ink); }
+
+.btn-add {
+  background: none;
+  border: 1.5px dashed var(--rule);
+  border-radius: 6px;
+  padding: 10px;
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  text-align: center;
+  margin-top: 8px;
+}
+.btn-add:hover { border-color: var(--gold); color: var(--gold); }
+
+.btn-icon {
+  background: none;
+  border: 1.5px solid var(--rule);
+  border-radius: 4px;
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: border-color .15s, color .15s;
+  padding: 0;
+  line-height: 1;
+}
+.btn-icon:hover { border-color: var(--danger); color: var(--danger); }
+
+/* INTERVIEW */
+.interview-layout {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+.prog-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-align: right;
+}
+.progress-track {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 48px;
+}
+.prog-seg {
+  flex: 1; height: 3px;
+  background: var(--rule);
+  border-radius: 2px;
+  transition: background .4s;
+}
+.prog-seg.done { background: var(--gold); }
+.prog-seg.active { background: var(--gold-light); }
+
+.section-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.5rem;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 28px;
+}
+.question-block { margin-bottom: 24px; }
+.q-label {
+  display: block;
+  font-size: .875rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+.q-hint {
+  font-size: .8rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 7px;
+  line-height: 1.4;
+}
+textarea, input[type="text"] {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .9rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  padding: 11px 13px;
+  resize: vertical;
+  transition: border-color .15s, box-shadow .15s;
+  line-height: 1.6;
+}
+textarea:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200,151,58,.12);
+}
+.module-list { display: flex; flex-direction: column; gap: 8px; }
+.module-row { display: flex; gap: 8px; align-items: center; }
+.module-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  width: 22px;
+  flex-shrink: 0;
+  text-align: right;
+}
+.module-row input { flex: 1; }
+.section-divider { border: none; border-top: 1px solid var(--rule); margin: 28px 0; }
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 36px;
+}
+
+/* GENERATING */
+.generating {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  text-align: center;
+}
+.spinner-ring {
+  width: 56px; height: 56px;
+  border: 3px solid var(--rule);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 28px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.generating h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+.generating p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+.gen-steps { margin-top: 32px; text-align: left; display: flex; flex-direction: column; gap: 10px; }
+.gen-step {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .85rem; color: var(--muted);
+  padding: 10px 14px; border-radius: 6px;
+  background: var(--white); border: 1px solid var(--rule);
+  transition: all .3s;
+}
+.gen-step.active { color: var(--ink); border-color: var(--gold); background: var(--gold-pale); }
+.gen-step.done { color: var(--teal); border-color: var(--teal-light); background: var(--teal-light); }
+.step-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--rule); flex-shrink: 0; transition: background .3s;
+}
+.gen-step.active .step-dot { background: var(--gold); }
+.gen-step.done .step-dot { background: var(--teal); }
+
+/* BRIEF */
+.brief-layout {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 24px 100px;
+}
+.brief-header {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--black);
+}
+.brief-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.brief-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.brief-meta-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+.brief-meta-item {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--muted); letter-spacing: .06em;
+}
+.brief-meta-item strong { color: var(--ink); font-weight: 500; }
+.brief-content { font-size: .95rem; line-height: 1.75; color: var(--ink-light); }
+.brief-content h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem; color: var(--ink);
+  margin: 36px 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.brief-content h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--gold); margin: 22px 0 8px;
+}
+.brief-content p { margin-bottom: 12px; }
+.brief-content ul { padding-left: 20px; margin-bottom: 12px; }
+.brief-content ul li { margin-bottom: 6px; }
+.brief-content strong { color: var(--ink); font-weight: 600; }
+.brief-content em { color: var(--muted); font-style: italic; }
+.brief-content table {
+  width: 100%; border-collapse: collapse;
+  margin: 16px 0 24px; font-size: .875rem;
+}
+.brief-content th {
+  background: var(--black); color: var(--white);
+  padding: 10px 14px; text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase; font-weight: 400;
+}
+.brief-content td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top; color: var(--ink-light);
+}
+.brief-content tr:nth-child(even) td { background: var(--gold-pale); }
+.brief-actions {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(250,250,248,.95);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--rule);
+  padding: 14px 24px;
+  display: flex; justify-content: center; gap: 12px;
+  z-index: 100;
+}
+.btn-copy, .btn-print, .btn-restart {
+  display: inline-flex; align-items: center; gap: 8px;
+  border-radius: 6px; padding: 10px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem; font-weight: 500; cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.btn-copy { background: var(--white); color: var(--ink); border: 1.5px solid var(--rule); }
+.btn-copy:hover { border-color: var(--ink); }
+.btn-print { background: var(--black); color: var(--white); border: none; }
+.btn-print:hover { background: var(--ink-light); }
+.btn-restart { background: none; color: var(--muted); border: 1.5px solid var(--rule); }
+.btn-restart:hover { color: var(--ink); border-color: var(--ink-light); }
+
+.error-box {
+  background: #FEF2F2; border: 1.5px solid var(--danger);
+  border-radius: 6px; padding: 16px 20px; margin-top: 24px;
+  font-size: .875rem; color: var(--danger); line-height: 1.5;
+}
+
+@media print {
+  .topbar, .brief-actions { display: none !important; }
+  .brief-layout { padding: 24px; }
+}
+@media (max-width: 600px) {
+  .brief-actions { flex-wrap: wrap; }
+  .welcome, .interview-layout { padding: 40px 16px 60px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="topbar-brand">Purdue Course Production · SME Interview</span>
+  <span class="topbar-step" id="topbar-step"></span>
+</nav>
+
+<!-- AUTH -->
+<div id="screen-auth" class="screen active">
+  <div class="welcome">
+    <p class="welcome-eyebrow">Purdue · Course Production</p>
+    <h1>Course Design<br><em>Interview</em></h1>
+    <p class="welcome-intro">Enter your name and the team passphrase to continue.</p>
+    <div class="question-block">
+      <label class="q-label" for="auth-name">Your name</label>
+      <input type="text" id="auth-name" placeholder="e.g. Larissa Johnson" />
+    </div>
+    <div class="question-block" style="margin-top:14px;">
+      <label class="q-label" for="auth-pass">Team passphrase</label>
+      <input type="password" id="auth-pass" placeholder="Enter passphrase" />
+    </div>
+    <div id="auth-error" style="color:#C0392B;font-size:.85rem;margin:10px 0;display:none;">Incorrect passphrase. Contact Andre for access.</div>
+    <button class="btn-primary" id="btn-auth" style="margin-top:20px;">Continue &#8594;</button>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div id="screen-welcome" class="screen">
+  <div class="welcome">
+    <p class="welcome-eyebrow">Purdue · Course Production</p>
+    <h1>Let's build your<br><em>course together.</em></h1>
+    <p class="welcome-intro">This short interview helps our instructional design team understand your course — your goals, your content, and your teaching style. It takes about 15–20 minutes and replaces a first meeting.</p>
+    <div class="welcome-meta">
+      <div class="meta-item"><span class="meta-icon">5</span><span>Five short sections covering outcomes, content, assessments, and production preferences</span></div>
+      <div class="meta-item"><span class="meta-icon">&#10003;</span><span>Your answers generate an ID brief your design team reviews before your first conversation</span></div>
+      <div class="meta-item"><span class="meta-icon">&#9998;</span><span>No wrong answers — write as you would in an email to a trusted colleague</span></div>
+    </div>
+    <button class="btn-primary" id="btn-start">Begin interview &#8594;</button>
+  </div>
+</div>
+
+<!-- INTERVIEW -->
+<div id="screen-interview" class="screen">
+  <div class="interview-layout">
+    <div class="prog-label" id="prog-label">1 of 5</div>
+    <div class="progress-track" id="progress-track"></div>
+    <div id="section-content"></div>
+    <div class="nav-row">
+      <button class="btn-ghost" id="btn-back">&#8592; Back</button>
+      <button class="btn-next" id="btn-next">Continue &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATING -->
+<div id="screen-generating" class="screen">
+  <div class="generating">
+    <div class="spinner-ring"></div>
+    <h2>Building your ID brief&#8230;</h2>
+    <p>This takes about 20&#8211;30 seconds. Sit tight.</p>
+    <div class="gen-steps" id="gen-steps"></div>
+  </div>
+</div>
+
+<!-- BRIEF -->
+<div id="screen-brief" class="screen">
+  <div class="brief-layout">
+    <div class="brief-header">
+      <div class="brief-eyebrow">Instructional Design Brief &middot; Course Production</div>
+      <div class="brief-title" id="brief-title"></div>
+      <div class="brief-meta-row" id="brief-meta"></div>
+    </div>
+    <div class="brief-content" id="brief-content"></div>
+  </div>
+  <div class="brief-actions">
+    <button class="btn-restart" id="btn-restart">&#8617; New interview</button>
+    <button class="btn-copy" id="btn-copy">&#8984; Copy brief</button>
+    <button class="btn-print" id="btn-print">&#9113; Print / Save PDF</button>
+  </div>
+</div>
+
+<!-- ERROR -->
+<div id="screen-error" class="screen">
+  <div class="welcome">
+    <h1>Something went wrong</h1>
+    <div class="error-box" id="error-msg"></div>
+    <br>
+    <button class="btn-primary" id="btn-err-restart">&#8592; Start over</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── CONFIG ─────────────────────────────────────────────────────────────────
+  var SECTIONS = [
+    {
+      tag: 'Section 1 of 5', title: 'Course Fundamentals',
+      fields: [
+        { id: 'courseName', label: 'What is the name of this course?', type: 'input', placeholder: 'e.g. Advanced Corporate Finance' },
+        { id: 'courseLevel', label: 'Who are the students and what program is this for?', hint: 'e.g. MBA Year 1, Daniels School of Business; MS in Data Science', type: 'input' },
+        { id: 'courseLength', label: 'How long is the course, and how is it structured?', hint: 'e.g. 8-week online module, 16-week semester, 5 units', type: 'input' },
+        { id: 'priorKnowledge', label: 'What knowledge or experience should students have before starting?', hint: 'Prerequisites, assumed skills, or background context.', type: 'textarea', rows: 3 }
+      ]
+    },
+    {
+      tag: 'Section 2 of 5', title: 'Learning Outcomes',
+      fields: [
+        { id: 'bigQuestion', label: 'What is the ONE big question this course answers for students?', hint: 'What will they be able to do or decide differently?', type: 'textarea', rows: 3 },
+        { id: 'outcomes', label: 'List the 3\u20136 core learning outcomes for this course.', hint: 'Start each with an action verb: Analyze, Apply, Design, Evaluate\u2026', type: 'textarea', rows: 5 },
+        { id: 'realWorldApply', label: 'Where will students apply these skills in their careers?', hint: 'Job roles, decision types, industries \u2014 the more specific the better.', type: 'textarea', rows: 3 }
+      ]
+    },
+    {
+      tag: 'Section 3 of 5', title: 'Content & Modules',
+      moduleField: true,
+      fields: [
+        { id: 'contentGaps', label: 'Are there topics students consistently struggle with in this subject area?', hint: 'Misconceptions, hard concepts, or skills that take extra time to develop.', type: 'textarea', rows: 3 },
+        { id: 'uniquePerspective', label: "What perspective or approach do YOU bring that students won\u2019t get elsewhere?", hint: 'Your research, industry experience, proprietary models, contrarian views.', type: 'textarea', rows: 4 }
+      ]
+    },
+    {
+      tag: 'Section 4 of 5', title: 'Assessment & Activities',
+      fields: [
+        { id: 'assessmentIdeas', label: 'What kinds of assignments feel most appropriate for this course?', hint: 'Case analyses, simulations, memos, presentations, peer review, group projects, etc.', type: 'textarea', rows: 4 },
+        { id: 'authenticTasks', label: 'What does strong student work look like in this course?', hint: 'Describe a piece of student work that would impress you.', type: 'textarea', rows: 4 },
+        { id: 'feedback', label: 'How do you currently give students feedback, and what feels most valuable to them?', type: 'textarea', rows: 3 }
+      ]
+    },
+    {
+      tag: 'Section 5 of 5', title: 'Media & Logistics',
+      fields: [
+        { id: 'videoApproach', label: "How do you prefer to deliver lecture content \u2014 and what\u2019s your on-camera comfort level?", hint: 'e.g. narrated slides, on camera, AI avatar, existing recordings', type: 'textarea', rows: 3 },
+        { id: 'existingMaterials', label: 'What existing materials, cases, or readings do you already have in mind?', hint: 'Textbooks, HBS cases, articles, your own publications, guest speakers.', type: 'textarea', rows: 3 },
+        { id: 'constraints', label: 'Are there any constraints or concerns we should know about?', hint: 'Timeline, sensitive topics, IP concerns, tech access, anything else.', type: 'textarea', rows: 3 },
+        { id: 'excited', label: 'What are you most excited about in this course?', hint: "The part you can\u2019t wait to teach \u2014 this helps us design with energy.", type: 'textarea', rows: 3 }
+      ]
+    }
+  ];
+
+  var GEN_STEPS = [
+    'Reading interview responses',
+    'Synthesizing learning outcomes',
+    'Mapping module structure',
+    'Drafting activities & assessments',
+    'Compiling ID brief'
+  ];
+
+  // ── STATE ──────────────────────────────────────────────────────────────────
+  var PROXY_URL = 'https://anthropic-proxyandrebeasley2012workersdev.andrebeasley2012.workers.dev';
+
+  var state = {
+    section: 0,
+    answers: {},
+    modules: ['', '', ''],
+    timer: null,
+    passphrase: '',
+    reviewerName: ''
+  };
+
+  // ── HELPERS ────────────────────────────────────────────────────────────────
+  function esc(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function el(id) { return document.getElementById(id); }
+
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+    el('screen-' + name).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── PROGRESS ───────────────────────────────────────────────────────────────
+  function renderProgress() {
+    el('prog-label').textContent = (state.section + 1) + ' of ' + SECTIONS.length;
+    el('progress-track').innerHTML = SECTIONS.map(function (_, i) {
+      var cls = i < state.section ? 'done' : i === state.section ? 'active' : '';
+      return '<div class="prog-seg ' + cls + '"></div>';
+    }).join('');
+  }
+
+  // ── MODULES ────────────────────────────────────────────────────────────────
+  function renderModules() {
+    var list = el('module-list');
+    if (!list) return;
+    list.innerHTML = state.modules.map(function (m, i) {
+      return '<div class="module-row">' +
+        '<span class="module-num">' + (i + 1) + '.</span>' +
+        '<input type="text" data-mod="' + i + '" value="' + esc(m) + '" placeholder="Module ' + (i + 1) + ' title" />' +
+        (state.modules.length > 1 ? '<button class="btn-icon" data-del="' + i + '" aria-label="Remove module">\u00d7</button>' : '') +
+        '</div>';
+    }).join('');
+
+    list.querySelectorAll('input[data-mod]').forEach(function (inp) {
+      inp.addEventListener('input', function () {
+        state.modules[parseInt(this.getAttribute('data-mod'))] = this.value;
+      });
+    });
+    list.querySelectorAll('button[data-del]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        state.modules.splice(parseInt(this.getAttribute('data-del')), 1);
+        renderModules();
+      });
+    });
+  }
+
+  // ── SECTION ────────────────────────────────────────────────────────────────
+  function renderSection() {
+    var sec = SECTIONS[state.section];
+    renderProgress();
+
+    var html = '<div class="section-tag">' + esc(sec.tag) + '</div>' +
+               '<div class="section-title">' + esc(sec.title) + '</div>';
+
+    if (sec.moduleField) {
+      html += '<div class="question-block">' +
+        '<label class="q-label">List the modules or major topics in this course (in order)</label>' +
+        '<p class="q-hint">Add as many as you need \u2014 a title or short phrase per module is fine.</p>' +
+        '<div class="module-list" id="module-list"></div>' +
+        '<button class="btn-add" id="btn-add-module">+ Add module</button>' +
+        '</div><hr class="section-divider">';
+    }
+
+    sec.fields.forEach(function (f) {
+      var val = esc(state.answers[f.id] || '');
+      html += '<div class="question-block">' +
+        '<label class="q-label" for="' + f.id + '">' + f.label + '</label>';
+      if (f.hint) html += '<p class="q-hint">' + f.hint + '</p>';
+      if (f.type === 'textarea') {
+        html += '<textarea id="' + f.id + '" rows="' + (f.rows || 4) + '" data-fid="' + f.id + '">' + val + '</textarea>';
+      } else {
+        html += '<input type="text" id="' + f.id + '" value="' + val + '" data-fid="' + f.id + '" placeholder="' + esc(f.placeholder || '') + '" />';
+      }
+      html += '</div>';
+    });
+
+    el('section-content').innerHTML = html;
+
+    // bind field inputs
+    el('section-content').querySelectorAll('[data-fid]').forEach(function (inp) {
+      inp.addEventListener('input', function () {
+        state.answers[this.getAttribute('data-fid')] = this.value;
+      });
+    });
+
+    if (sec.moduleField) {
+      renderModules();
+      var addBtn = el('btn-add-module');
+      if (addBtn) addBtn.addEventListener('click', function () {
+        state.modules.push('');
+        renderModules();
+      });
+    }
+
+    el('btn-back').style.visibility = state.section === 0 ? 'hidden' : 'visible';
+    el('btn-next').textContent = state.section === SECTIONS.length - 1 ? 'Generate ID Brief \u2192' : 'Continue \u2192';
+  }
+
+  // ── GEN STEPS ──────────────────────────────────────────────────────────────
+  function startGenSteps() {
+    el('gen-steps').innerHTML = GEN_STEPS.map(function (s, i) {
+      return '<div class="gen-step" id="gs' + i + '"><div class="step-dot"></div>' + s + '</div>';
+    }).join('');
+    var step = 0;
+    setActive(step);
+    state.timer = setInterval(function () {
+      setDone(step);
+      step++;
+      if (step < GEN_STEPS.length) setActive(step);
+      else clearInterval(state.timer);
+    }, 4500);
+  }
+
+  function setActive(i) { var e = el('gs' + i); if (e) e.className = 'gen-step active'; }
+  function setDone(i) { var e = el('gs' + i); if (e) e.className = 'gen-step done'; }
+
+  function stopGenSteps() {
+    clearInterval(state.timer);
+    GEN_STEPS.forEach(function (_, i) { setDone(i); });
+  }
+
+  // ── TRANSCRIPT ─────────────────────────────────────────────────────────────
+  function buildTranscript() {
+    var out = '# SME Interview Transcript\n\n';
+    SECTIONS.forEach(function (sec) {
+      out += '## ' + sec.title + '\n\n';
+      if (sec.moduleField) {
+        out += '**Course Modules:**\n';
+        state.modules.filter(function (m) { return m.trim(); }).forEach(function (m, i) {
+          out += '- Module ' + (i + 1) + ': ' + m + '\n';
+        });
+        out += '\n';
+      }
+      sec.fields.forEach(function (f) {
+        out += '**' + f.label + '**\n' + (state.answers[f.id] || '(not provided)') + '\n\n';
+      });
+    });
+    return out;
+  }
+
+  // ── API ────────────────────────────────────────────────────────────────────
+  function generateBrief() {
+    showScreen('generating');
+    el('topbar-step').textContent = 'Generating brief';
+    startGenSteps();
+
+    var transcript = buildTranscript();
+
+    var systemPrompt = "You are a senior instructional designer at Purdue University's Course Design and Development (CDD) department. Produce a structured, professional Instructional Design (ID) Brief to hand to an ID team for course production. Be practical, specific, and actionable.\n\nOutput the brief in clean markdown with these sections:\n\n## Executive Summary\n2\u20133 sentences capturing course identity, audience, and core pedagogical challenge.\n\n## Course Outcomes\nRewrite the faculty's stated outcomes into 4\u20136 polished, Bloom's-aligned learning outcomes starting with action verbs. Note the highest Bloom's level targeted.\n\n## Module Structure\nA table with columns: Module | Topic Focus | Key Learning Goal | Suggested Content Type\n\n## Recommended Assessments & Activities\nFor each of the 2\u20133 most important assessments: name/type, what it measures, format/length, outcome alignment. Also suggest 2\u20133 formative activity types for online delivery.\n\n## Content & SME Notes\nFaculty's unique angle to foreground, content gaps needing scaffolding, recommended existing materials if mentioned.\n\n## Media & Production Guidance\nVideo format recommendation, estimated video count and length per module, special production considerations.\n\n## ID Flags & Open Questions\n3\u20135 specific items the instructional designer should follow up on before production begins.\n\nTone: professional, direct. No filler. Internal document.";
+
+    fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tool: 'sme',
+        passphrase: state.passphrase,
+        reviewerName: state.reviewerName,
+        courseName: state.answers.courseName || '',
+        facultyName: state.answers.facultyName || '',
+        program: state.answers.courseLevel || '',
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: 'Generate the ID brief from this interview:\n\n' + transcript }]
+      })
+    })
+    .then(function (res) {
+      if (!res.ok) {
+        return res.json().catch(function () { return {}; }).then(function (err) {
+          throw new Error((err.error && err.error.message) || 'API error ' + res.status);
+        });
+      }
+      return res.json();
+    })
+    .then(function (data) {
+      var raw = (data.content || []).map(function (b) { return b.text || ''; }).join('');
+      stopGenSteps();
+      renderBrief(raw);
+    })
+    .catch(function (err) {
+      stopGenSteps();
+      el('error-msg').textContent = err.message || 'The brief could not be generated. Please try again.';
+      el('topbar-step').textContent = '';
+      showScreen('error');
+    });
+  }
+
+  // ── MARKDOWN → HTML ────────────────────────────────────────────────────────
+  function mdToHtml(text) {
+    var lines = text.split('\n');
+    var html = '';
+    var inUl = false, inTable = false;
+
+    function inline(s) {
+      return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>');
+    }
+    function closeAll() {
+      if (inUl) { html += '</ul>'; inUl = false; }
+      if (inTable) { html += '</tbody></table>'; inTable = false; }
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (/^##\s/.test(line)) {
+        closeAll(); html += '<h2>' + inline(line.slice(3)) + '</h2>';
+      } else if (/^###\s/.test(line)) {
+        closeAll(); html += '<h3>' + inline(line.slice(4)) + '</h3>';
+      } else if (/^\|/.test(line)) {
+        if (inUl) { html += '</ul>'; inUl = false; }
+        if (/^[\s|:\-]+$/.test(line.replace(/\|/g, ''))) continue;
+        var cells = line.split('|').map(function (c) { return c.trim(); }).filter(Boolean);
+        if (!inTable) {
+          html += '<table><thead><tr>';
+          cells.forEach(function (c) { html += '<th>' + inline(c) + '</th>'; });
+          html += '</tr></thead><tbody>';
+          inTable = true;
+        } else {
+          html += '<tr>';
+          cells.forEach(function (c) { html += '<td>' + inline(c) + '</td>'; });
+          html += '</tr>';
+        }
+      } else if (/^-\s/.test(line)) {
+        if (inTable) { html += '</tbody></table>'; inTable = false; }
+        if (!inUl) { html += '<ul>'; inUl = true; }
+        html += '<li>' + inline(line.slice(2)) + '</li>';
+      } else if (line.trim() === '' || /^-{3,}$/.test(line.trim())) {
+        closeAll();
+      } else {
+        closeAll();
+        if (line.trim()) html += '<p>' + inline(line) + '</p>';
+      }
+    }
+    closeAll();
+    return html;
+  }
+
+  // ── RENDER BRIEF ───────────────────────────────────────────────────────────
+  function renderBrief(markdown) {
+    var courseName = state.answers.courseName || 'Untitled Course';
+    var level = state.answers.courseLevel || '';
+    var modCount = state.modules.filter(function (m) { return m.trim(); }).length;
+    var today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    el('brief-title').textContent = courseName;
+
+    var meta = '<span class="brief-meta-item"><strong>Generated:</strong> ' + today + '</span>';
+    if (level) meta = '<span class="brief-meta-item"><strong>Program:</strong> ' + esc(level) + '</span>' + meta;
+    if (modCount) meta += '<span class="brief-meta-item"><strong>Modules:</strong> ' + modCount + '</span>';
+    el('brief-meta').innerHTML = meta;
+    el('brief-content').innerHTML = mdToHtml(markdown);
+
+    el('topbar-step').textContent = 'ID Brief';
+    showScreen('brief');
+  }
+
+  // ── COPY ───────────────────────────────────────────────────────────────────
+  function copyBrief() {
+    var text = el('brief-content').innerText || '';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function () {
+        el('btn-copy').textContent = '\u2713 Copied';
+        setTimeout(function () { el('btn-copy').textContent = '\u2984 Copy brief'; }, 2000);
+      });
+    }
+  }
+
+  // ── BIND EVENTS ────────────────────────────────────────────────────────────
+  function init() {
+    el('btn-auth').addEventListener('click', function () {
+      var name = el('auth-name').value.trim();
+      var pass = el('auth-pass').value.trim();
+      if (!name) { el('auth-error').textContent = 'Please enter your name.'; el('auth-error').style.display = 'block'; return; }
+      if (!pass) { el('auth-error').textContent = 'Please enter the team passphrase.'; el('auth-error').style.display = 'block'; return; }
+      state.passphrase = pass;
+      state.reviewerName = name;
+      el('auth-error').style.display = 'none';
+      showScreen('welcome');
+    });
+
+    el('auth-pass').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') el('btn-auth').click();
+    });
+    el('btn-start').addEventListener('click', function () {
+      state.section = 0;
+      renderSection();
+      el('topbar-step').textContent = 'Interview';
+      showScreen('interview');
+    });
+
+    el('btn-back').addEventListener('click', function () {
+      if (state.section > 0) { state.section--; renderSection(); }
+    });
+
+    el('btn-next').addEventListener('click', function () {
+      if (state.section < SECTIONS.length - 1) {
+        state.section++;
+        renderSection();
+      } else {
+        generateBrief();
+      }
+    });
+
+    el('btn-restart').addEventListener('click', restart);
+    el('btn-err-restart').addEventListener('click', restart);
+    el('btn-copy').addEventListener('click', copyBrief);
+    el('btn-print').addEventListener('click', function () { window.print(); });
+  }
+
+  function restart() {
+    state.answers = {};
+    state.modules = ['', '', ''];
+    state.section = 0;
+    el('topbar-step').textContent = '';
+    showScreen('welcome');
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
