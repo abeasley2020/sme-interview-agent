@@ -735,7 +735,7 @@ textarea:focus, input[type="text"]:focus {
 
     var systemPrompt = "You are a senior instructional designer at Purdue University's Course Design and Development (CDD) department. Produce a structured, professional Instructional Design (ID) Brief to hand to an ID team for course production. Be practical, specific, and actionable.\n\nOutput the brief in clean markdown with these sections:\n\n## Executive Summary\n2\u20133 sentences capturing course identity, audience, and core pedagogical challenge.\n\n## Course Outcomes\nRewrite the faculty's stated outcomes into 4\u20136 polished, Bloom's-aligned learning outcomes starting with action verbs. Note the highest Bloom's level targeted.\n\n## Module Structure\nA table with columns: Module | Topic Focus | Key Learning Goal | Suggested Content Type\n\n## Recommended Assessments & Activities\nFor each of the 2\u20133 most important assessments: name/type, what it measures, format/length, outcome alignment. Also suggest 2\u20133 formative activity types for online delivery.\n\n## Content & SME Notes\nFaculty's unique angle to foreground, content gaps needing scaffolding, recommended existing materials if mentioned.\n\n## Media & Production Guidance\nVideo format recommendation, estimated video count and length per module, special production considerations.\n\n## ID Flags & Open Questions\n3\u20135 specific items the instructional designer should follow up on before production begins.\n\nTone: professional, direct. No filler. Internal document.";
 
-    fetch('https://api.anthropic.com/v1/messages', {
+    fetch('https://anthropic-proxyandrebeasley2012workersdev.andrebeasley2012.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
