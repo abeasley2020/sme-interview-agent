@@ -4,7 +4,7 @@ Project conventions and stack for the SME Interview Agent. Read this at the star
 
 ## What this project is
 
-A single-file static web app for **Purdue Course Design and Development (CDD)**. Faculty subject-matter experts (SMEs) complete a 5-section interview; the responses are sent to a Cloudflare Worker proxy, which calls the Anthropic Claude API and returns a structured Instructional Design (ID) brief.
+A single-file static web app for **Purdue University Online's Course Production department**. Faculty subject-matter experts (SMEs) complete a 5-section interview; the responses are sent to a Cloudflare Worker proxy, which calls the Anthropic Claude API and returns a structured Instructional Design (ID) brief.
 
 Live at: `index.html` deployed wherever (currently TBD — see [README.md](README.md)).
 

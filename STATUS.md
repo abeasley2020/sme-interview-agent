@@ -8,7 +8,7 @@ Living snapshot of where the project stands. Update at the end of meaningful wor
 
 ## Current phase
 
-**Stable / in production.** The interview flow works end-to-end, the brief generates against the live proxy, and the page is in use by the Purdue CDD team. No active rewrite or major feature work in flight.
+**Stable / in production.** The interview flow works end-to-end, the brief generates against the live proxy, and the page is in use by the Purdue University Online Course Production team. No active rewrite or major feature work in flight.
 
 ## What's working
 
@@ -44,7 +44,7 @@ Living snapshot of where the project stands. Update at the end of meaningful wor
 ## Open questions
 
 - Should responses persist across refresh (localStorage)? Trade-off: convenience vs. the privacy stance currently stated in the README.
-- Should the brief be auto-emailed to a shared CDD inbox after generation, or remain copy/print only?
+- Should the brief be auto-emailed to a shared Course Production inbox after generation, or remain copy/print only?
 - Should there be multiple interview templates (different question sets) selectable at the start?
 
 ## Next steps

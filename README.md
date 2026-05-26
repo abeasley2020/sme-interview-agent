@@ -8,7 +8,7 @@ A structured, AI-augmented intake interview for faculty subject-matter experts (
 
 ## Overview
 
-The instructional design team at Purdue CDD partners with dozens of faculty SMEs each year to build online and hybrid courses. The first conversation — gathering course identity, outcomes, content, assessments, and production preferences — is high-friction to schedule and inconsistent in what it captures.
+The Course Production team at Purdue University Online partners with dozens of faculty SMEs each year to build online and hybrid courses. The first conversation — gathering course identity, outcomes, content, assessments, and production preferences — is high-friction to schedule and inconsistent in what it captures.
 
 This tool front-loads that conversation into a single web page. A faculty member enters their name and a team passphrase, walks through five short sections, and receives a structured ID brief that the design team reviews before their first synchronous meeting. Result: better-prepared kickoffs, consistent intake data, and less back-and-forth.
 
@@ -36,7 +36,7 @@ The app is intentionally minimal — a single static HTML file, a small Cloudfla
    3. **Content & Modules** — dynamic module list, common student struggles, SME's unique angle
    4. **Assessment & Activities** — assignment types, what strong work looks like, feedback practices
    5. **Media & Logistics** — video preferences, existing materials, constraints, what excites the SME
-4. **Generating** — The interview transcript is sent to the proxy, which calls Claude with a CDD-specific system prompt.
+4. **Generating** — The interview transcript is sent to the proxy, which calls Claude with a team-specific system prompt.
 5. **Brief** — A structured ID brief is rendered with executive summary, outcomes, module table, assessment recommendations, content notes, media guidance, and open ID questions.
 6. **Copy / Print** — Results can be copied to the clipboard or printed/saved as PDF.
 
@@ -44,7 +44,7 @@ The app is intentionally minimal — a single static HTML file, a small Cloudfla
 
 ## Features
 
-- **Passphrase-gated access** — Tool is restricted to authorized Purdue CDD reviewers; the passphrase is verified server-side by the proxy.
+- **Passphrase-gated access** — Tool is restricted to authorized Course Production reviewers; the passphrase is verified server-side by the proxy.
 - **No database** — All state is in-memory in the browser tab. Closing the tab clears the session.
 - **Dynamic module list** — SMEs can add or remove module rows as they think through their course structure.
 - **Markdown-aware rendering** — The Claude-generated brief is parsed (headers, lists, tables, bold/italic) and styled with Purdue branding.
@@ -158,7 +158,7 @@ The `systemPrompt` variable inside `generateBrief()` defines the structure and t
 - **No persistent storage.** Interview responses live only in browser memory until the page is closed or refreshed.
 - **No analytics or trackers** are loaded by the page itself.
 - **Audit logging** happens at the proxy layer — reviewer name and timestamp are recorded for internal usage tracking, but free-text responses are not stored long-term.
-- **Passphrase distribution** is handled out-of-band by the CDD team lead. Do not commit the passphrase to this repo.
+- **Passphrase distribution** is handled out-of-band by the Course Production team lead. Do not commit the passphrase to this repo.
 
 ---
 
@@ -174,4 +174,4 @@ sme-interview-agent/
 
 ## Acknowledgments
 
-Built for the **Purdue Course Design and Development** team. Generation powered by **Anthropic Claude**. Proxy auth and audit logging via **Cloudflare Workers**.
+Built for the **Purdue University Online Course Production** team. Generation powered by **Anthropic Claude**. Proxy auth and audit logging via **Cloudflare Workers**.

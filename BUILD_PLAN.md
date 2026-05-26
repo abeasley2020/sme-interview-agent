@@ -24,15 +24,15 @@ Three components, two of which live elsewhere:
 
 **Decision:** Keep the entire app in one `index.html`. No bundler, no framework, no build step.
 
-**Why:** Audience is the Purdue CDD team — internal users on managed devices. Optimizing for "anyone can open this file and use it" trumps any DX win from a framework. Also makes the app dead-simple to deploy anywhere, including GitHub Pages and Cloudflare Pages with zero config.
+**Why:** Audience is the Purdue University Online Course Production team — internal users on managed devices. Optimizing for "anyone can open this file and use it" trumps any DX win from a framework. Also makes the app dead-simple to deploy anywhere, including GitHub Pages and Cloudflare Pages with zero config.
 
-**When to revisit:** If the app grows past ~1500 lines or needs shared components with another CDD tool. Until then, the simplicity is load-bearing.
+**When to revisit:** If the app grows past ~1500 lines or needs shared components with another Course Production tool. Until then, the simplicity is load-bearing.
 
 ### Passphrase auth, no per-user accounts
 
 **Decision:** Single shared team passphrase, validated server-side by the proxy. No identity provider, no SSO, no user accounts.
 
-**Why:** The tool is for ~10–30 reviewers on the CDD team. Real auth (Purdue Career Account + OIDC) would be more correct, but the operational cost (managing app registration, refresh tokens, session storage) isn't justified for the user count. The proxy logs reviewer name on each request, which is enough for audit.
+**Why:** The tool is for ~10–30 reviewers on the Course Production team. Real auth (Purdue Career Account + OIDC) would be more correct, but the operational cost (managing app registration, refresh tokens, session storage) isn't justified for the user count. The proxy logs reviewer name on each request, which is enough for audit.
 
 **When to revisit:** If access expands to faculty self-serve at scale, or if Purdue IT requires SSO for any tool that touches API keys.
 
@@ -72,9 +72,9 @@ Roughly ordered by leverage — concrete value per unit effort. Not commitments,
 
 ### Medium leverage
 
-- **Multiple interview templates.** Today there's one `SECTIONS` array. A small refactor could let the page accept `?template=mba` or similar and load a different question set. Useful if CDD wants intake variants for exec ed, MOOC, undergrad, etc.
+- **Multiple interview templates.** Today there's one `SECTIONS` array. A small refactor could let the page accept `?template=mba` or similar and load a different question set. Useful if the Course Production team wants intake variants for exec ed, MOOC, undergrad, etc.
 - **Edit brief before sharing.** Make the rendered brief `contenteditable` so faculty can correct anything before copying. Low effort; high "feels professional" payoff.
-- **Auto-email brief to CDD inbox.** Worker-side: on a successful generation, also POST to a SendGrid/Postmark/Microsoft Graph endpoint. Avoids the copy-paste step.
+- **Auto-email brief to Course Production inbox.** Worker-side: on a successful generation, also POST to a SendGrid/Postmark/Microsoft Graph endpoint. Avoids the copy-paste step.
 - **Save brief as `.md` download** in addition to copy/print. One-click "Download as Markdown" button.
 
 ### Lower leverage (worth doing only if a real signal emerges)
@@ -87,5 +87,5 @@ Roughly ordered by leverage — concrete value per unit effort. Not commitments,
 ## Open questions
 
 - **Hosting target.** Where does this actually deploy long-term? GitHub Pages works but doesn't have password protection at the page level (the passphrase only gates generation, not page visibility). Cloudflare Pages + Access could gate visibility too if needed.
-- **Brief storage.** Should generated briefs ever be archived (not the responses, just the output) for the CDD team to retrieve later? Currently no — faculty are responsible for saving the PDF they print.
+- **Brief storage.** Should generated briefs ever be archived (not the responses, just the output) for the Course Production team to retrieve later? Currently no — faculty are responsible for saving the PDF they print.
 - **Versioning the system prompt.** As the brief format evolves, do older briefs reference the version that produced them? Today no. Easy to add once it matters.
