@@ -1,6 +1,6 @@
 # SME Interview Agent
 
-A structured, AI-augmented intake interview for faculty subject-matter experts (SMEs) at Purdue University's Course Design and Development (CDD) department. Replaces the traditional first kickoff meeting with a 15–20 minute guided conversation that produces a polished Instructional Design (ID) Brief, ready for the production team.
+A structured, AI-augmented intake interview for faculty subject-matter experts (SMEs) at Purdue University Online's Course Production department. Replaces the traditional first kickoff meeting with a 15–20 minute guided conversation that produces a polished Instructional Design (ID) Brief, ready for the production team.
 
 **Live demo:** _TBD_
 
